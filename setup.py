@@ -137,8 +137,8 @@ def main():
             cur.execute(plays_sql);
             cur.execute("""CREATE TABLE players (
                    id INTEGER PRIMARY KEY,
-                   first_name VARCHAR(30),
-                   last_name VARCHAR(30),
+                   name_first VARCHAR(30),
+                   name_last VARCHAR(30),
                    team CHAR(3),
                    bats CHAR(1),
                    throws CHAR(1)
@@ -210,15 +210,15 @@ def main():
                                    )
 
             execute_values(cur, """INSERT INTO players(id, 
-                                                       first_name, last_name, 
-                                                       team, 
-                                                       bats, throws) 
+                                                   name_first, name_last, 
+                                                   team, 
+                                                   bats, throws) 
                                 VALUES %s 
                                 ON CONFLICT DO NOTHING""", # two way players / no DH
                            data_tuples)
-
     
         conn.commit()
+    # main()
 
 if __name__ == "__main__":
     main()
