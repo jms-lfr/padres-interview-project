@@ -1,4 +1,5 @@
 import psycopg2 
+from psycopg2.extras import execute_values
 from dotenv import load_dotenv
 from os import environ, remove
 from os.path import abspath
@@ -171,6 +172,51 @@ def main():
                             )
             finally:
                 remove("modified_data.csv")
+
+            cur.execute("""SELECT DISTINCT ON (pitcher_bam_id) pitcher_bam_id,
+                                pitcher_name_first,
+                                pitcher_name_last,
+                                away_team,
+                                home_team,
+                                bottom,
+                                pitcher_side
+                        FROM plays;
+                        """)
+            data_tuples = []
+            for row in cur.fetchall():
+                data_tuples.append( (row[0], # id
+                                     row[1], row[2], # name
+                                     row[3] if row[5] else row[4], # away team if pitching in bottom of inning
+                                     'U', # bat side
+                                     row[6] # throw side
+                                    )
+                                   )
+            cur.execute("""SELECT DISTINCT ON (batter_bam_id) batter_bam_id,
+                        batter_name_first,
+                        batter_name_last,
+                        away_team,
+                        home_team,
+                        bottom,
+                        batter_side
+                        FROM plays;
+                        """)
+            for row in cur.fetchall():
+                data_tuples.append( (row[0], # id 
+                                     row[1], row[2], # name 
+                                     row[4] if row[5] else row[3],
+                                     row[6], # bat side
+                                     'U', # throw side
+                                    ) 
+                                   )
+
+            execute_values(cur, """INSERT INTO players(id, 
+                                                       first_name, last_name, 
+                                                       team, 
+                                                       bats, throws) 
+                                VALUES %s 
+                                ON CONFLICT DO NOTHING""", # two way players / no DH
+                           data_tuples)
+
     
         conn.commit()
 
