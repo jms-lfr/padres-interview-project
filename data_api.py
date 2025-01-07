@@ -1,11 +1,15 @@
 from flask import Flask, jsonify, request, make_response 
+
 import psycopg2
 from psycopg2 import sql
 from psycopg2.pool import ThreadedConnectionPool
 from psycopg2.extras import RealDictCursor
+
 from dotenv import load_dotenv
 from os import environ
+
 from datetime import datetime
+from utils import TEAM_ABBRV_TO_NAME
 
 _ = load_dotenv()
 DB_NAME = environ.get("DB_NAME")
@@ -30,13 +34,38 @@ def plays():
 
     team = request.args.get("team")
     player = request.args.get("player")
-    if (not team or len(team) != 3) and not player:
-        return make_response("Must specify team (3 letter abbreviation) or player (by id)", 400)
+    try:
+        player = int(player)
+    except:
+        player = None
+    if (not team or team not in TEAM_ABBRV_TO_NAME) and not player:
+        return make_response("Must specify team (valid 3 letter abbreviation) or player (by bam_id)", 400)
+
+    pos = request.args.get("position")
+    valid_pitcher_pos = pos in {"P", "p"} # [Pitcher]
+    valid_batter_pos = pos in {"H", "h", "B", "b"} # [H]itter, [B]atter
 
     if team:
-        pass
+        if valid_pitcher_pos: 
+            query += " AND pitcher_team = %s "
+            data_tuple += (team,)
+        elif valid_batter_pos:
+            query += " AND batter_team = %s "
+            data_tuple += (team,)
+        else:
+            query += " AND (batter_team = %s OR pitcher_team = %s) "
+            data_tuple += (team, team)
+
     if player:
-        pass
+        if valid_pitcher_pos:
+            query += " AND pitcher_bam_id = %s "
+            data_tuple += (player,)
+        elif valid_batter_pos:
+            query += " AND batter_bam_id = %s "
+            data_tuple += (player,)
+        else:
+            query += " AND (batter_bam_id = %s OR pitcher_bam_id = %s)"
+            data_tuple += (player, player)
     
     start_date = request.args.get("start_date")
     if start_date:
@@ -48,7 +77,7 @@ def plays():
         query += " AND game_date >= %s "
         data_tuple += (start_date,)
 
-        if end_date: # will be ignored if no start_date
+        if end_date: # ignored if no start_date
             try:
                 end_date = datetime.strptime(end_date, "%Y-%m-%d")
             except ValueError:
