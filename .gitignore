@@ -2,4 +2,4 @@ padres_project_data.csv
 venv
 temp.txt
 __pycache__
-
+frontend/node_modules
