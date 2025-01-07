@@ -18,11 +18,25 @@ api = Flask(__name__)
 
 @api.route("/plays")
 def plays():
-    query = "SELECT * FROM plays WHERE 1=1 "
+    query = "SELECT {} FROM plays WHERE 1=1 "
     data_tuple = ()
     fields = request.args.get("fields")
-    #if not fields:
-    #    return make_response(f"Must include desired fields as query parameter. Available fields: {plays_columns}", 400)
+
+    if not fields:
+        return make_response(f"Must include desired fields as query parameter. Available fields: {plays_columns}", 400)
+
+    # only take valid fields
+    fields = [ sql.Identifier(f) for f in fields.split(",") if f in plays_columns ] 
+
+    team = request.args.get("team")
+    player = request.args.get("player")
+    if (not team or len(team) != 3) and not player:
+        return make_response("Must specify team (3 letter abbreviation) or player (by id)", 400)
+
+    if team:
+        pass
+    if player:
+        pass
     
     start_date = request.args.get("start_date")
     if start_date:
@@ -44,7 +58,8 @@ def plays():
     
     conn = connection_pool.getconn()
     with conn.cursor() as cur:
-        cur.execute(query, data_tuple)
+        cur.execute( sql.SQL(query).format( sql.SQL(", ").join(fields) ),
+                    data_tuple)
         rows = cur.fetchall()
 
     connection_pool.putconn(conn)
