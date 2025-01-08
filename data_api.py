@@ -84,6 +84,12 @@ def plays():
                 return make_response("Invalid date format (use YYYY-MM-DD)", 400)
             query += " AND game_date <= %s "
             data_tuple += (end_date,) 
+
+    end_pa = request.args.get("end_pa")
+    if end_pa and end_pa.lower().startswith('t'):
+        query += " AND event_type is not null "
+
+    query += "ORDER BY game_date ASC, at_bat_number ASC, pitch_seq ASC;"
     
     conn = connection_pool.getconn()
     with conn.cursor() as cur:
