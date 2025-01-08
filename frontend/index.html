@@ -14,8 +14,7 @@
 
 		<label for="team-selector">Select a team:</label>
 		<br>
-		<select id="team-selector" ng-model="selectedTeam" ng-init="ctrl.getTeams()" 
-			ng-options="full for (full, abbrev) in teams" ng-change="ctrl.getPlayers()">
+		<select id="team-selector" ng-model="selectedTeam" ng-options="full for (full, abbrev) in teams" ng-change="ctrl.getPlayers()">
 		</select>
 
 		<br></br>

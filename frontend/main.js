@@ -34,12 +34,12 @@ app.controller("playerList", function($scope, $http, DataService, $timeout) {
 			});
 	}
 
-	this.getTeams = function() {
-		DataService.getTeams()
-			.then( function(data) { 
-				$scope.teams = data['teams']; 
-			});
-	};
+	//this.getTeams = function() {
+	DataService.getTeams()
+		.then( function(data) { 
+			$scope.teams = data['teams']; 
+		});
+	//};
 
 	let currPlayer = undefined;
 	this.setCurrPlayer = function(player) {
