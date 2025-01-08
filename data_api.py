@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from os import environ
 
 from datetime import datetime
-from utils import TEAM_ABBRV_TO_NAME
+from utils import TEAM_ABBRV_TO_NAME_DICT, TEAM_NAME_TO_ABBRV_DICT
 
 _ = load_dotenv()
 DB_NAME = environ.get("DB_NAME")
@@ -38,7 +38,7 @@ def plays():
         player = int(player)
     except:
         player = None
-    if (not team or team not in TEAM_ABBRV_TO_NAME) and not player:
+    if (not team or team not in TEAM_ABBRV_TO_NAME_DICT) and not player:
         return make_response("Must specify team (valid 3 letter abbreviation) or player (by bam_id)", 400)
 
     pos = request.args.get("position")
@@ -112,6 +112,10 @@ def players():
 
     connection_pool.putconn(conn)
     return jsonify({"players": rows}) 
+
+@api.route("/teams")
+def teams():
+    return jsonify({"teams": TEAM_NAME_TO_ABBRV_DICT}) 
 
 if __name__ == "__main__":
     connection_pool = ThreadedConnectionPool(1, 10, 

@@ -31,7 +31,7 @@ TEAM_NAME_TO_ABBRV_DICT = {
             "Washington Nationals": "WSH"
         }
 
-TEAM_ABBRV_TO_NAME = {v: k for k, v in TEAM_NAME_TO_ABBRV_DICT.items()}
+TEAM_ABBRV_TO_NAME_DICT = {v: k for k, v in TEAM_NAME_TO_ABBRV_DICT.items()}
 
 def teamToAbbrv(team: str) -> str:
     return TEAM_NAME_TO_ABBRV_DICT.get(team, team)

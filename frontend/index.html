@@ -4,16 +4,31 @@
 	  <meta charset="UTF-8">
 	  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 	  <script src="main.js"></script>
+	  <title>Padres Interview Project</title>
+	  <link rel="icon" type="image/x-icon" href="/favicon256.png">
   </head>
 
   <body>
-	<div ng-controller="temp">
-		<h1>{{ name }}</h1>
-		<h1>{{ team }}</h2>
-		<hr>
-	</div>
 	<div ng-controller="playerList">
-		<h1>{{ players.players[0]["name_first"] }} {{players.players[0]["name_last"] }}!</h1>
+		<h1>DEBUG: {{ players[0]["name_first"] }} {{players[0]["name_last"] }}!</h1>
+
+		<label for="team-selector">Select a team:</label>
+		<br>
+		<select id="team-selector" ng-model="selectedTeam" ng-init="getTeams()" 
+			ng-options="full for (full, abbrev) in teams" ng-change="getPlayers()">
+		</select>
+
+		<br></br>
+
+		<label for="player-selector">Select a player:</label>
+		<br>
+		<div id="player-selector">
+			<div ng-repeat="player in players" class="radiobullet">
+				<input type="radio" id="option-{{$index}}" name="playerGroup" ng-value="player.id" ng-model="selectedPlayer" ng-click="logCurrPlayer(player)">
+				<label for=option-{{$index}}">{{player.name_first}} {{player.name_last}}</label>
+			</div>
+		</div>
+
 	</div>
   </body>
 
