@@ -9,13 +9,13 @@
   </head>
 
   <body>
-	<div ng-controller="playerList">
-		<h1>DEBUG: {{ players[0]["name_first"] }} {{players[0]["name_last"] }}!</h1>
+	<div ng-controller="playerList as ctrl">
+		<h1>DEBUG: {{ players[0]["name_first"] }} {{ players[0]["name_last"] }}!</h1>
 
 		<label for="team-selector">Select a team:</label>
 		<br>
-		<select id="team-selector" ng-model="selectedTeam" ng-init="getTeams()" 
-			ng-options="full for (full, abbrev) in teams" ng-change="getPlayers()">
+		<select id="team-selector" ng-model="selectedTeam" ng-init="ctrl.getTeams()" 
+			ng-options="full for (full, abbrev) in teams" ng-change="ctrl.getPlayers()">
 		</select>
 
 		<br></br>
@@ -24,10 +24,18 @@
 		<br>
 		<div id="player-selector">
 			<div ng-repeat="player in players" class="radiobullet">
-				<input type="radio" id="option-{{$index}}" name="playerGroup" ng-value="player.id" ng-model="selectedPlayer" ng-click="logCurrPlayer(player)">
+				<input type="radio" id="option-{{$index}}" name="playerGroup" ng-value="player.id" ng-model="selectedPlayer" ng-click="ctrl.setCurrPlayer(player)">
 				<label for=option-{{$index}}">{{player.name_first}} {{player.name_last}}</label>
 			</div>
 		</div>
+
+		<br>
+
+		<label for="start-date-selector">Start date:</label>
+		<input type="date" id="start-date-selector" name="start-date-input" ng-model="selectedStartDate" placeholder="YYYY-MM-DD" ng-change="ctrl.setStartDate(selectedStartDate)">
+		<br>
+		<label for="end-date-selector">End date:</label> <span style="display:inline-block; width: 0px;"></span> <!-- Align date selectors -->
+		<input type="date" id="end-date-selector" name="end-date-input" ng-model="selectedEndDate" placeholder="YYYY-MM-DD" ng-change="ctrl.setEndDate(selectedEndDate)">	
 
 	</div>
   </body>

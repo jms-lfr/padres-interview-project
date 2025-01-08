@@ -26,23 +26,39 @@ app.service("DataService", function($http) {
 });
 
 app.controller("playerList", function($scope, $http, DataService, $timeout) {
-	$scope.getPlayers = function() {
+
+	this.getPlayers = function() {
 		DataService.getPlayers($scope.selectedTeam)
 			.then( function(data) { 
 				$timeout(function() { $scope.players = data; } ); // timeout to make sure angular updates for cached result 
 			});
 	}
 
-	$scope.getTeams = function() {
+	this.getTeams = function() {
 		DataService.getTeams()
 			.then( function(data) { 
 				$scope.teams = data['teams']; 
 			});
 	};
 
-	$scope.logCurrPlayer = function(player) {
-		console.log(player);
-	}
+	let currPlayer = undefined;
+	this.setCurrPlayer = function(player) {
+		currPlayer = player;
+	};
+
+	$scope.selectedStartDate = new Date(2024, 6, 1); // July 1st
+	$scope.selectedEndDate = new Date(2024, 7, 1); // August 1st
+	let startDate = "";
+	let endDate = "";
+	this.setStartDate = function(date) {
+		startDate = date.toISOString().substring(0, 10);
+	};
+	this.setStartDate($scope.selectedStartDate);
+
+	this.setEndDate = function(date) {
+		endDate = date.toISOString().substring(0, 10);
+	};
+	this.setEndDate($scope.selectedEndDate);
 
 });
 
