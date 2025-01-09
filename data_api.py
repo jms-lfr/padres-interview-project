@@ -126,7 +126,7 @@ def players():
 
 @api.route("/teams")
 def teams():
-    return jsonify({"teams": TEAM_NAME_TO_ABBRV_DICT}) 
+    return teams_ret
 
 if __name__ == "__main__":
     connection_pool = ThreadedConnectionPool(1, 10, 
@@ -138,6 +138,8 @@ if __name__ == "__main__":
     with conn.cursor() as cur:
         cur.execute("SELECT * FROM plays LIMIT 0")
         plays_columns = set(desc[0] for desc in cur.description)
+    
+    teams_ret = jsonify({"teams": TEAM_NAME_TO_ABBRV_DICT}) # don't want to jsonify every single time
 
     api.run()
 
