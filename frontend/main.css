@@ -6,6 +6,7 @@
 button {
 	display: flex;
 	background-color: #2F241D; /* Padres Brown */
+	border: 1px #2F241D;
 	color: #FFC425; /* Padres Gold */
 	font-weight: bold;
 	align-items: center;
@@ -15,6 +16,18 @@ button {
 	height: 40px;
 	font-size: 20px;
 	border-radius: 10px;
+	box-shadow: 0 4px #999;
+	cursor: pointer;
+}
+
+button:hover{
+	background-color: #1C1511;
+}
+
+button:active {
+	background-color: #090705;
+	box-shadow: 0 2px #666;
+	transform: translateY(4px);
 }
 
 #header-container {
@@ -75,4 +88,7 @@ button {
   font-size: 47px;
 }
 
+#PAs {
+	text-align: center;
+}
 
