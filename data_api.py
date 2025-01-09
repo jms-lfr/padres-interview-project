@@ -43,7 +43,7 @@ def plays():
         player = int(player)
     except:
         player = None
-    if (not team or team not in TEAM_ABBRV_TO_NAME_DICT) and not player:
+    if (not team or team.upper() not in TEAM_ABBRV_TO_NAME_DICT) and not player:
         return make_response("Must specify team (valid 3 letter abbreviation) or player (by bam_id)", 400)
 
     pos = request.args.get("position")
