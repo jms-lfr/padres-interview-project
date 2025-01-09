@@ -8,7 +8,7 @@ app.service("DataService", function($http) {
 			return $http.get("http://localhost:5000/players?team=" + team)
 				.then( function (response) {
 					players[team] = response.data['players'].sort((a, b) => a.name_last.localeCompare(b.name_last));
-					return players[team];;
+					return players[team];
 				})
 				.catch(function (err) { console.log(err); console.warn("Make sure you've started the backend");});
 		}else{
@@ -98,7 +98,8 @@ app.controller("playerList", function($scope, $http, DataService, $timeout) {
 				.then( (data) => { 
 					// IBB not incldued in wOBA
 					const plays = data["plays"].filter( (play) => play["event_type"] != "intent_walk");
-					console.log(plays);
+					//console.log(plays);
+					d3.select("#graph").selectAll("*").remove(); // clear
 					if(plays.length == 0){
 						d3.select("#graph")
 							.append("text")
@@ -135,8 +136,7 @@ app.controller("playerList", function($scope, $http, DataService, $timeout) {
 						rolling_wOBA.push([numerator / denominator, i]);
 					}
 
-					console.log(rolling_wOBA);
-					d3.select("#graph").selectAll("*").remove(); // clear
+					//console.log(rolling_wOBA);
 
 					const parsed = rolling_wOBA.map(([woba, pa_num]) => ({
 						PA_num: pa_num,
@@ -148,14 +148,15 @@ app.controller("playerList", function($scope, $http, DataService, $timeout) {
 					};
 
 
-					const plot_width = 1060;
+					const plot_width = document.getElementById("graph").offsetWidth;
+					const plot_height = document.getElementById("graph").offsetHeight;
 					const plot = Plot.plot({
 						marginTop: 20,
 						marginBottom: 30,
 						marginLeft: 30,
 						marginRight: 20,
 						width: plot_width, 
-						height: plot_width / (4/3), // 4:3 aspect ratio
+						height: plot_height,
 						y: {grid: true, label: "wOBA", tickFormat: wobaFormat},
 						marks: [
 							Plot.lineY(parsed, {x: "PA_num", y: "wOBA", stroke: "#2F241D"})
