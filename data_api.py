@@ -31,6 +31,11 @@ def plays():
 
     # only take valid fields
     fields = [ sql.Identifier(f) for f in fields.split(",") if f in plays_columns ] 
+    to_replace = sql.Identifier("game_date")
+    for i in range(len(fields)):
+        if fields[i] == to_replace:
+            fields[i] = sql.SQL("to_char(game_date, 'YYYY-MM-DD') as game_date")
+            break
 
     team = request.args.get("team")
     player = request.args.get("player")
@@ -87,7 +92,7 @@ def plays():
 
     end_pa = request.args.get("end_pa")
     if end_pa and end_pa.lower().startswith('t'):
-        query += " AND event_type is not null "
+        query += " AND event_type is not null AND event_type != 'caught_stealing_2b' AND event_type != 'caught_stealing_3b' AND event_type != 'caught_stealing_home'"
 
     query += "ORDER BY game_date ASC, at_bat_number ASC, pitch_seq ASC;"
     
