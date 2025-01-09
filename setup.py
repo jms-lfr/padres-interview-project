@@ -214,7 +214,7 @@ def main():
                                                    team, 
                                                    bats, throws) 
                                 VALUES %s 
-                                ON CONFLICT DO NOTHING""", # two way players / no DH
+                                ON CONFLICT DO NOTHING""", # two way players / no DH. could use a DO UPDATE instead
                            data_tuples)
     
         conn.commit()
