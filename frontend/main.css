@@ -3,11 +3,26 @@
 	height: auto;
 }
 
+button {
+	display: flex;
+	background-color: #2F241D; /* Padres Brown */
+	color: #FFC425; /* Padres Gold */
+	font-weight: bold;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	width: 50%;
+	height: 40px;
+	font-size: 20px;
+	border-radius: 10px;
+}
+
 #header-container {
 	display: grid;
 	align-items: center;
 	column-gap: 5px;
 	grid-template-columns: min-content max-content;
+	margin-left: 20px;
 }
 
 #app-container {
@@ -19,12 +34,24 @@
 #main-container {
 	display: flex;
 	flex-grow: 1;
+	width: 95%;
+	padding-top: 10px;
+	margin: 0 auto;
 }
 
 #sidebar {
-	width: 15%;
+	width: 20%;
 	padding: 5px;
 	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 5px;
+}
+
+#player-selector {
+	column-count: 2;
+	min-height: 25%; /* less page shifting; could probably find a better number */
 }
 
 #graph-display {
@@ -33,7 +60,9 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	min-height: 600px;
+	min-height: 800px;
+	max-height: 800px;
+	width: 75%;
 }
 
 #graph {

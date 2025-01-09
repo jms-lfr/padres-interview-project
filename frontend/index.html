@@ -19,9 +19,8 @@
 	<div id="app-container" ng-controller="playerList as ctrl">
 		<div id="main-container">
 			<aside id="sidebar">
-				<label for="team-selector">Select a team:</label>
-				<br>
-				<select id="team-selector" ng-model="selectedTeam" ng-options="full for (full, abbrev) in teams" ng-change="ctrl.getPlayers()">
+				<label for="team-dropdown">Select a team:</label>
+				<select id="team-dropdown" ng-model="selectedTeam" ng-options="full for (full, abbrev) in teams" ng-change="ctrl.getPlayers()">
 				</select>
 
 				<br></br>
@@ -37,12 +36,15 @@
 
 				<br>
 
-				<label for="start-date-selector">Start date:</label>
-				<input type="date" id="start-date-selector" name="start-date-input" ng-model="selectedStartDate" placeholder="YYYY-MM-DD" ng-change="ctrl.setStartDate(selectedStartDate)">
-				<br>
-				<!-- Align date selectors -->
-				<label for="end-date-selector">End date:</label> <span style="display:inline-block; width: 0px;"></span> 
-				<input type="date" id="end-date-selector" name="end-date-input" ng-model="selectedEndDate" placeholder="YYYY-MM-DD" ng-change="ctrl.setEndDate(selectedEndDate)">	
+				<div>
+					<label for="start-date-selector">Start date:</label>
+					<input type="date" id="start-date-selector" name="start-date-input" ng-model="selectedStartDate" ng-change="ctrl.setStartDate(selectedStartDate)">
+				</div>
+				<div>
+					<!-- Align date selectors -->
+					<label for="end-date-selector">End date:</label> <span style="display:inline-block; width: 1px;"></span> 
+					<input type="date" id="end-date-selector" name="end-date-input" ng-model="selectedEndDate" ng-change="ctrl.setEndDate(selectedEndDate)">
+				</div>
 
 				<br></br>
 
