@@ -20,6 +20,19 @@ DB_PORT = environ.get("DB_PORT")
 
 api = Flask(__name__)
 
+with api.app_context():
+    TEAMS_JSON = jsonify({"teams": TEAM_NAME_TO_ABBRV_DICT}) # don't want to jsonify every single time
+    connection_pool = ThreadedConnectionPool(1, 10, 
+                                             dbname=DB_NAME, 
+                                             user=DB_USER, password=DB_PASS, 
+                                             host=DB_HOST, port=DB_PORT, 
+                                             cursor_factory=RealDictCursor)
+    conn = connection_pool.getconn()
+    with conn.cursor() as cur:
+        cur.execute("SELECT * FROM plays LIMIT 0")
+        PLAYS_COLUMNS = set(desc[0] for desc in cur.description)
+    connection_pool.putconn(conn)
+
 @api.route("/plays")
 def plays():
     query = "SELECT {} FROM plays WHERE 1=1 "
@@ -27,10 +40,10 @@ def plays():
     fields = request.args.get("fields")
 
     if not fields:
-        return make_response(f"Must include desired fields as query parameter. Available fields: {plays_columns}", 400)
+        return make_response(f"Must include desired fields as query parameter. Available fields: {PLAYS_COLUMNS}", 400)
 
     # only take valid fields
-    fields = [ sql.Identifier(f) for f in fields.split(",") if f in plays_columns ] 
+    fields = [ sql.Identifier(f) for f in fields.split(",") if f in PLAYS_COLUMNS ] 
     to_replace = sql.Identifier("game_date")
     for i in range(len(fields)):
         if fields[i] == to_replace:
@@ -126,20 +139,8 @@ def players():
 
 @api.route("/teams")
 def teams():
-    return teams_ret
+    return TEAMS_JSON 
 
-if __name__ == "__main__":
-    connection_pool = ThreadedConnectionPool(1, 10, 
-                                             dbname=DB_NAME, 
-                                             user=DB_USER, password=DB_PASS, 
-                                             host=DB_HOST, port=DB_PORT, 
-                                             cursor_factory=RealDictCursor)
-    conn = connection_pool.getconn()
-    with conn.cursor() as cur:
-        cur.execute("SELECT * FROM plays LIMIT 0")
-        plays_columns = set(desc[0] for desc in cur.description)
-    
-    teams_ret = jsonify({"teams": TEAM_NAME_TO_ABBRV_DICT}) # don't want to jsonify every single time
-
+if __name__ == "__main__":    
     api.run()
 
