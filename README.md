@@ -12,14 +12,14 @@ I ran and tested this project on Windows 10 Build 19045 on a 1920x1080 monitor.
 ## Running
 ### Backend:
 1. Update variables in `.env`
-2. `py setup.py`
+2. `py setup.py`  
 a. Takes `CSV_FILENAME` from `.env` and creates a PostgreSQL database. Appends to `./modified_data.csv` and then removes it.
 3.  `py data_api.py` to start the API
 
 ### Frontend:
 1. Run frontend server via `cd frontend` followed by `npx http-server . -p 4200 --cors`
 a. Was getting CORS errors on port 9999
-2. Go to `localhost:4200` rather than `192.168.1.6:4200` or `127.0.0.1:4200` (otherwise, I was getting CORS errors since I make the `GET` requests to `localhost:5000`)
+2. Go to `localhost:4200` rather than `192.168.1.6:4200` or `127.0.0.1:4200` (otherwise, I was getting CORS errors since I make the `GET` requests to `localhost:5000`)  
 a. I tested on Firefox 134.0
 
 ## About
